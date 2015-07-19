@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		212D07151B5B2D0400965733 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212D07141B5B2D0400965733 /* AppDelegate.swift */; };
 		212D07171B5B2D0400965733 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212D07161B5B2D0400965733 /* ViewController.swift */; };
-		212D071A1B5B2D0400965733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 212D07181B5B2D0400965733 /* Main.storyboard */; };
 		212D071C1B5B2D0400965733 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 212D071B1B5B2D0400965733 /* Images.xcassets */; };
 		212D071F1B5B2D0400965733 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 212D071D1B5B2D0400965733 /* LaunchScreen.xib */; };
 		212D072B1B5B2D0400965733 /* TetriswiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212D072A1B5B2D0400965733 /* TetriswiftTests.swift */; };
@@ -30,7 +29,6 @@
 		212D07131B5B2D0400965733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		212D07141B5B2D0400965733 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		212D07161B5B2D0400965733 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		212D07191B5B2D0400965733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		212D071B1B5B2D0400965733 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		212D071E1B5B2D0400965733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		212D07241B5B2D0400965733 /* TetriswiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetriswiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,7 +77,6 @@
 			children = (
 				212D07141B5B2D0400965733 /* AppDelegate.swift */,
 				212D07161B5B2D0400965733 /* ViewController.swift */,
-				212D07181B5B2D0400965733 /* Main.storyboard */,
 				212D071B1B5B2D0400965733 /* Images.xcassets */,
 				212D071D1B5B2D0400965733 /* LaunchScreen.xib */,
 				212D07121B5B2D0400965733 /* Supporting Files */,
@@ -192,7 +189,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				212D071A1B5B2D0400965733 /* Main.storyboard in Resources */,
 				212D071F1B5B2D0400965733 /* LaunchScreen.xib in Resources */,
 				212D071C1B5B2D0400965733 /* Images.xcassets in Resources */,
 			);
@@ -236,14 +232,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		212D07181B5B2D0400965733 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				212D07191B5B2D0400965733 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		212D071D1B5B2D0400965733 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
