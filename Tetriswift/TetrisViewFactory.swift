@@ -10,7 +10,8 @@ import UIKit
 
 class TetrisViewFactory {
     func createView(parent : UIView?, color : UIColor?) -> TetrisView {
-        var v = TetrisView(frame : CGRectMake(0, 0, TetrisView.UnitX * 2, TetrisView.UnitY * 2))
+        var v = TetrisView(frame : CGRectMake(0, 0, TetrisView.Unit.x * 2, TetrisView.Unit.y * 2))
+        v.reset()
         v.backgroundColor = color
         parent?.addSubview(v)
         return v

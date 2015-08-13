@@ -12,13 +12,11 @@ class TetrisViewController: UIViewController {
     
     @IBOutlet weak var StatButton: UIButton!
     let Rate : Int = 30
-    var duration : NSTimeInterval = 0.0
     
-    var cnt : Float = 0
-    var level : Int = 0
-    
-    var dx : CGFloat = 0
-    var dy : CGFloat = 0
+    var cnt : Int = 0
+    var level : Int = 1
+    //var dest : CGPoint = CGPoint(x: 0, y: 0)
+    //var prev : CGPoint = CGPoint(x: 0, y: 0)
     
     var factory : TetrisViewFactory!
     var view1 : TetrisView!
@@ -32,63 +30,46 @@ class TetrisViewController: UIViewController {
     }
     
     func StartGame() {
-        duration = (1.0 / Double(Rate))
         factory = TetrisViewFactory()
         world = World(width: self.view.layer.frame.maxX, height: self.view.layer.frame.maxY)
         view1 = factory.createView(self.view, color: UIColor.redColor())
-        NSTimer.scheduledTimerWithTimeInterval(duration, target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(Double(1.0 / Double(Rate)), target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
     }
     
-    func CurrentThreshold() -> Float {
-        return Float(duration) * Float(-10 * level + 40)
-    }
-    
-    func onUpdate(timer : NSTimer){
-        cnt += Float(duration)
-        if (CurrentThreshold() < cnt) {
-            cnt = 0
-            if (dy == 0) {
-                dy = view1.layer.frame.origin.y
-            }
-            
-            dy += TetrisView.UnitY
+    func IsTimeToMove(count : Int) -> Bool {
+        if (count < Rate - (level - 1)) {
+            return false
         }
         
-        if (dx > 0 || dy > 0) {
-            if (dx == 0) {
-                dx = view1.layer.frame.origin.x
-            }
-            
-            if (dy == 0) {
-                dy = view1.layer.frame.origin.y
-            }
-            
-            if (view1.moveTo(dx, y: dy, w: world)) {
-                println("$$$$$$$$$")
+        return true
+    }
+    
+    
+    func onUpdate(timer : NSTimer) {
+        cnt += 1
+        
+        if (IsTimeToMove(cnt)) {
+            println("origin: \(view1.layer.frame.origin)")
+            println("dest0: \(view1.dest)")
+            view1.dest.y += TetrisView.Unit.y
+            cnt = 0
+        }
+        
+        if (!CGPointEqualToPoint(view1.dest, view1.prev)) {
+            println("origin: \(view1.frame.origin)")
+            println("dest: \(view1.dest)")
+            if (view1.moveTo(view1.dest, w: world)) {
+                println("$$$$$$$$$ \(view1.layer.frame.origin)")
             } else {
                 println("Stop")
+                world.addBlock(view1.frame)
                 view1 = factory.createView(self.view, color: UIColor.blueColor())
             }
             
-            dx = 0
-            dy = 0
+            view1.reset()
         }
     }
-    
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        for touch : AnyObject in touches {
-            let location = touch.locationInView(self.view)
-            println("!!!!!!!!")
-            dx = location.x
-            dy = location.y
-        }
-    }
-    
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        for touch : AnyObject in touches {
-            let location = touch.locationInView(self.view)
-        }
-    }
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,13 +82,4 @@ class TetrisViewController: UIViewController {
     }
     
     
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
 }
