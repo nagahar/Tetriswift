@@ -33,7 +33,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Tetris" id="IjE-IG-MPx">
-                        <barButtonItem key="rightBarButtonItem" title="詳細" id="2Uw-TD-Pdz">
+                        <barButtonItem key="rightBarButtonItem" title="Score" id="2Uw-TD-Pdz">
                             <connections>
                                 <segue destination="Z1P-0A-nY3" kind="show" id="h7x-Xt-jED"/>
                             </connections>

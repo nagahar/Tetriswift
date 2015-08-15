@@ -11,17 +11,14 @@ import UIKit
 class TetrisViewController: UIViewController {
     
     @IBOutlet weak var StatButton: UIButton!
-    let Rate : Int = 30
+    let Rate: Int = 30
     
-    var cnt : Int = 0
-    var level : Int = 1
-    //var dest : CGPoint = CGPoint(x: 0, y: 0)
-    //var prev : CGPoint = CGPoint(x: 0, y: 0)
+    var timeCount: Int = 0
+    var level: Int = 1
     
-    var factory : TetrisViewFactory!
-    var view1 : TetrisView!
-    var view2 : TetrisView!
-    var world : World!
+    var factory: ViewFactory = ViewFactory.getInstance()
+    var proxy: ViewProxy!
+    var world: World!
     
     @IBAction func Start(sender: AnyObject) {
         self.StartGame()
@@ -30,13 +27,12 @@ class TetrisViewController: UIViewController {
     }
     
     func StartGame() {
-        factory = TetrisViewFactory()
         world = World(width: self.view.layer.frame.maxX, height: self.view.layer.frame.maxY)
-        view1 = factory.createView(self.view, color: UIColor.redColor())
+        proxy = factory.create(self.view, w: world)
         NSTimer.scheduledTimerWithTimeInterval(Double(1.0 / Double(Rate)), target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
     }
     
-    func IsTimeToMove(count : Int) -> Bool {
+    func IsTimeToMove(count: Int) -> Bool {
         if (count < Rate - (level - 1)) {
             return false
         }
@@ -44,32 +40,29 @@ class TetrisViewController: UIViewController {
         return true
     }
     
-    
-    func onUpdate(timer : NSTimer) {
-        cnt += 1
+    func onUpdate(timer: NSTimer) {
+        timeCount += 1
         
-        if (IsTimeToMove(cnt)) {
-            println("origin: \(view1.layer.frame.origin)")
-            println("dest0: \(view1.dest)")
-            view1.dest.y += TetrisView.Unit.y
-            cnt = 0
+        if (IsTimeToMove(timeCount)) {
+            proxy.setDiff(CGPointMake(0, World.unit))
+            timeCount = 0
         }
         
-        if (!CGPointEqualToPoint(view1.dest, view1.prev)) {
-            println("origin: \(view1.frame.origin)")
-            println("dest: \(view1.dest)")
-            if (view1.moveTo(view1.dest, w: world)) {
-                println("$$$$$$$$$ \(view1.layer.frame.origin)")
+        // 全て動かす
+        if (proxy.IsMoving()) {
+            if (proxy.moveTo()) {
+                println("$$$$$$$$$ \(proxy.layer.frame.origin)")
             } else {
                 println("Stop")
-                world.addBlock(view1.frame)
-                view1 = factory.createView(self.view, color: UIColor.blueColor())
+                let t = proxy.dispose()
+                world.putTetrimino(t)
+                world.removeLine()
+                proxy = factory.create(self.view, w: world)
             }
             
-            view1.reset()
+            proxy.reset()
         }
     }
-   
     
     override func viewDidLoad() {
         super.viewDidLoad()

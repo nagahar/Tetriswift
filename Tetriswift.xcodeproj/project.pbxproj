@@ -14,11 +14,13 @@
 		212F27831B6CFC1200F4A70B /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212F27821B6CFC1200F4A70B /* World.swift */; };
 		213EBA701B7CC98A00362ADA /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213EBA6F1B7CC98A00362ADA /* Extension.swift */; };
 		213EBA721B7CF14B00362ADA /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213EBA711B7CF14B00362ADA /* InfoTableViewController.swift */; };
+		216A27511B7EDC2E0058E49A /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A27501B7EDC2E0058E49A /* Block.swift */; };
+		216A27531B7EFF130058E49A /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A27521B7EFF130058E49A /* Tetrimino.swift */; };
 		218822491B5B3EC200369C1F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218822471B5B3EC200369C1F /* Main.storyboard */; };
 		21C712381B63BCE6000BAD75 /* TetrisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C712361B63BCE6000BAD75 /* TetrisViewController.swift */; };
 		21C712391B63BCE6000BAD75 /* TetrisViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21C712371B63BCE6000BAD75 /* TetrisViewController.xib */; };
-		21E26C641B6CE53B00AD9BA7 /* TetrisViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C631B6CE53B00AD9BA7 /* TetrisViewFactory.swift */; };
-		21E26C661B6CEE5D00AD9BA7 /* TetrisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C651B6CEE5D00AD9BA7 /* TetrisView.swift */; };
+		21E26C641B6CE53B00AD9BA7 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C631B6CE53B00AD9BA7 /* ViewFactory.swift */; };
+		21E26C661B6CEE5D00AD9BA7 /* ViewProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,11 +45,13 @@
 		212F27821B6CFC1200F4A70B /* World.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		213EBA6F1B7CC98A00362ADA /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		213EBA711B7CF14B00362ADA /* InfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
+		216A27501B7EDC2E0058E49A /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		216A27521B7EFF130058E49A /* Tetrimino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tetrimino.swift; sourceTree = "<group>"; };
 		218822481B5B3EC200369C1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		21C712361B63BCE6000BAD75 /* TetrisViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisViewController.swift; sourceTree = "<group>"; };
 		21C712371B63BCE6000BAD75 /* TetrisViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TetrisViewController.xib; sourceTree = "<group>"; };
-		21E26C631B6CE53B00AD9BA7 /* TetrisViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisViewFactory.swift; sourceTree = "<group>"; };
-		21E26C651B6CEE5D00AD9BA7 /* TetrisView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisView.swift; sourceTree = "<group>"; };
+		21E26C631B6CE53B00AD9BA7 /* ViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
+		21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,10 +101,12 @@
 				212D07121B5B2D0400965733 /* Supporting Files */,
 				21C712361B63BCE6000BAD75 /* TetrisViewController.swift */,
 				21C712371B63BCE6000BAD75 /* TetrisViewController.xib */,
-				21E26C631B6CE53B00AD9BA7 /* TetrisViewFactory.swift */,
-				21E26C651B6CEE5D00AD9BA7 /* TetrisView.swift */,
+				21E26C631B6CE53B00AD9BA7 /* ViewFactory.swift */,
+				21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */,
 				212F27821B6CFC1200F4A70B /* World.swift */,
 				213EBA6F1B7CC98A00362ADA /* Extension.swift */,
+				216A27501B7EDC2E0058E49A /* Block.swift */,
+				216A27521B7EFF130058E49A /* Tetrimino.swift */,
 			);
 			path = Tetriswift;
 			sourceTree = "<group>";
@@ -232,12 +238,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				213EBA721B7CF14B00362ADA /* InfoTableViewController.swift in Sources */,
+				216A27511B7EDC2E0058E49A /* Block.swift in Sources */,
+				216A27531B7EFF130058E49A /* Tetrimino.swift in Sources */,
 				212F27831B6CFC1200F4A70B /* World.swift in Sources */,
 				21C712381B63BCE6000BAD75 /* TetrisViewController.swift in Sources */,
 				213EBA701B7CC98A00362ADA /* Extension.swift in Sources */,
-				21E26C641B6CE53B00AD9BA7 /* TetrisViewFactory.swift in Sources */,
+				21E26C641B6CE53B00AD9BA7 /* ViewFactory.swift in Sources */,
 				212D07151B5B2D0400965733 /* AppDelegate.swift in Sources */,
-				21E26C661B6CEE5D00AD9BA7 /* TetrisView.swift in Sources */,
+				21E26C661B6CEE5D00AD9BA7 /* ViewProxy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
