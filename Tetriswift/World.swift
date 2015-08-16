@@ -9,57 +9,27 @@
 import UIKit
 
 class World {
-    static let unit: CGFloat = 50.0
-    var blocks: [[Block?]] = [[]]
-    var width: CGFloat = 0.0
-    var height: CGFloat = 0.0
+    static let rows: Int = 20
+    static let columns: Int = 10
+    static var blocks: [[Block?]] = [[Block?]](count: World.rows, repeatedValue: [Block?](count: World.columns, repeatedValue: nil))
     
-    init () {
-    }
-    
-    init (width: CGFloat, height: CGFloat) {
-        self.width = width
-        self.height = height
-        var xlen = self.convert(width)
-        var ylen = self.convert(height)
-        self.blocks = [[Block?]](count: ylen, repeatedValue: [Block?](count: xlen, repeatedValue: nil))
-    }
-    
-    func translate(p: CGPoint, view: UIView) {
-        view.transform = CGAffineTransformTranslate(view.transform, p.x , p.y)
-    }
-    
-    private func convert(val: CGPoint) -> (Int, Int) {
-        return (convert(val.x), convert(val.y))
-    }
-    
-    private func convert(val: CGFloat) -> Int {
-        return Int(val / World.unit)
-    }
-    
-    private func convert(o: CGRect) -> (x: Int, y: Int, maxX: Int, maxY: Int) {
-        let xi = self.convert(o.origin.x)
-        let maxX = xi + convert(o.width)
-        let yi = self.convert(o.origin.y)
-        let maxY = yi + convert(o.height)
-        return (xi, yi, maxX, maxY)
-    }
-    
-    func normalize(p: CGFloat, max: CGFloat) -> CGFloat {
-        let ret = World.unit * floor(p / World.unit)
-        if (ret < 0) {
-            return 0
-        } else if (max < ret) {
-            return -1
-        } else {
-            return ret
+    static var sharedInstance: World {
+        struct Static {
+            static let instance: World = World()
         }
+        
+        return Static.instance
     }
+    
+    static func getInstance() -> World {
+        return World.sharedInstance
+    }
+    
     
     func putTetrimino(tetrimino: Tetrimino) {
         for b in tetrimino.blocks {
-            let p = convert(b.frame.origin)
-            self.blocks[p.1][p.0] = b
+            let p = b.worigin
+            World.blocks[p.row][p.column] = b
         }
         
         /*
@@ -96,16 +66,13 @@ class World {
     }
     
     
-    func IsMovable(o: CGRect) -> Bool {
-        let tuple = convert(o)
-        if (self.blocks.count < tuple.maxY || self.blocks.first!.count < tuple.maxX) {
-            println("Overflow**********")
-            return false
-        }
-        
-        for i in tuple.y..<tuple.maxY {
-            for j in tuple.x..<tuple.maxX {
-                if let b = self.blocks[i][j] {
+    func isMovable(tuple: (row: Int, column: Int, height: Int, width: Int)) -> Bool {
+        let maxRow = tuple.row + tuple.height
+        let maxCol = tuple.column + tuple.width
+       
+        for i in tuple.row..<maxRow {
+            for j in tuple.column..<maxCol {
+                if let b = World.blocks[i][j] {
                     return false
                 }
             }
@@ -113,5 +80,4 @@ class World {
         
         return true
     }
-    
 }

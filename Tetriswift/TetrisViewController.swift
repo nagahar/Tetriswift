@@ -13,26 +13,29 @@ class TetrisViewController: UIViewController {
     @IBOutlet weak var StatButton: UIButton!
     let Rate: Int = 30
     
+    var factory: TetriminoFactory?
     var timeCount: Int = 0
     var level: Int = 1
-    
-    var factory: ViewFactory = ViewFactory.getInstance()
-    var proxy: ViewProxy!
-    var world: World!
+    var tetrimino: Tetrimino?
+    var game: Game?
+    var world: World?
+    var blocks: [Block] = []
     
     @IBAction func Start(sender: AnyObject) {
-        self.StartGame()
-        StatButton.hidden = true
-        
-    }
-    
-    func StartGame() {
-        world = World(width: self.view.layer.frame.maxX, height: self.view.layer.frame.maxY)
-        proxy = factory.create(self.view, w: world)
+        game = Game(width: self.view.frame.width, height: self.view.frame.height)
+        world = game!.world
+        factory = TetriminoFactory(game: game!)
+        tetrimino = factory!.create(self.view)
+        for b in tetrimino!.blocks {
+            blocks.append(b)
+        }
+        game!.start()
         NSTimer.scheduledTimerWithTimeInterval(Double(1.0 / Double(Rate)), target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
+        StatButton.hidden = true
     }
     
-    func IsTimeToMove(count: Int) -> Bool {
+    
+    func isTimeToMove(count: Int) -> Bool {
         if (count < Rate - (level - 1)) {
             return false
         }
@@ -41,26 +44,38 @@ class TetrisViewController: UIViewController {
     }
     
     func onUpdate(timer: NSTimer) {
-        timeCount += 1
+        self.timeCount += 1
         
-        if (IsTimeToMove(timeCount)) {
-            proxy.setDiff(CGPointMake(0, World.unit))
-            timeCount = 0
-        }
-        
-        // 全て動かす
-        if (proxy.IsMoving()) {
-            if (proxy.moveTo()) {
-                println("$$$$$$$$$ \(proxy.layer.frame.origin)")
-            } else {
-                println("Stop")
-                let t = proxy.dispose()
-                world.putTetrimino(t)
-                world.removeLine()
-                proxy = factory.create(self.view, w: world)
+        if (self.isTimeToMove(timeCount)) {
+            for b in tetrimino!.blocks {
+                b.dest = b.dest + CGPointMake(0, Game.unit)
             }
             
-            proxy.reset()
+            self.timeCount = 0
+        }
+        
+        var isBound: Bool = false
+        for b in tetrimino!.blocks {
+            if (b.isMoving()) {
+                b.moveTo(world!)
+                println("$$$$$$$$$ \(b.frame.origin)")
+                isBound = isBound && b.isBound
+                if (b.isBound) {
+                    println("Stop \(b.frame.origin)")
+                }
+                
+                b.reset()
+            }
+        }
+        
+        if (isBound) {
+            for b in tetrimino!.blocks {
+                b.stop()
+            }
+            
+            world!.putTetrimino(tetrimino!)
+            world!.removeLine()
+            tetrimino = factory!.create(self.view)
         }
     }
     
@@ -73,6 +88,4 @@ class TetrisViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
 }

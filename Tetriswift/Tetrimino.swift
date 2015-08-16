@@ -10,35 +10,25 @@ import UIKit
 
 class Tetrimino {
     let type: TetriminoType
-    let blocks: [Block]
+    let game: Game
+    var blocks: [Block] = []
     var isStopped: Bool = false
+    var size: CGSize = CGSizeZero
     
-    init (t: TetriminoType = .None) {
-        self.type = t
-        self.blocks = t.create()
+    init(type: TetriminoType = .None, game: Game) {
+        self.type = type
+        self.game = game
+        self.blocks = Tetrimino.create(self)
     }
     
-    var Size: CGSize {
-        get{
-            return type.getSize()
-        }
+    deinit {
+        dispose()
     }
-}
-
-enum TetriminoType {
-    case None
-    case O
-    case I
-    case S
-    case Z
-    case J
-    case L
-    case T
     
-    func create() -> [Block] {
-        switch self {
+    static func create(tetrimino: Tetrimino) -> [Block] {
+        switch tetrimino.type {
         case .O:
-            return createO()
+            return createO(tetrimino)
         case .I:
             return ([])
         case .S:
@@ -56,37 +46,32 @@ enum TetriminoType {
         }
     }
     
-    func getSize() -> CGSize {
-        let u = World.unit
-        switch self {
-        case .O:
-            return CGSizeMake(2 * u, 2 * u)
-        case .I:
-            return CGSizeZero
-        case .S:
-            return CGSizeZero
-        case .Z:
-            return CGSizeZero
-        case .J:
-            return CGSizeZero
-        case .L:
-            return CGSizeZero
-        case .T:
-            return CGSizeZero
-        case .None:
-            return CGSizeZero
+    func dispose() {
+        
+    }
+    
+    func update(dest: CGPoint) {
+        for b in self.blocks {
+            b.setDestination(dest)
         }
     }
     
-    private func createO() -> [Block]{
+    static func createO(tetrimino: Tetrimino) -> [Block]{
         var ret: [Block] = []
-        let u = World.unit
+        let u = Game.unit
         //let c = UIColor.yellowColor()
         let c = UIColor.blueColor()
-        ret.append(Block(o: CGPointMake(0, 0), c: c))
-        ret.append(Block(o: CGPointMake(0, u), c: c))
-        ret.append(Block(o: CGPointMake(u, 0), c: c))
-        ret.append(Block(o: CGPointMake(u, u), c: c))
+        ret.append(createBlock(CGPointMake(0, 0), color: c, tetrimino: tetrimino))
+        ret.append(createBlock(CGPointMake(0, u), color: c, tetrimino: tetrimino))
+        ret.append(createBlock(CGPointMake(u, 0), color: c, tetrimino: tetrimino))
+        ret.append(createBlock(CGPointMake(u, u), color: c, tetrimino: tetrimino))
+        tetrimino.size = CGSizeMake(2 * u, 2 * u)
         return ret
     }
+    
+    static func createBlock(origin: CGPoint, color: UIColor, tetrimino: Tetrimino) -> Block {
+        return Block(o: origin, c: color, t: tetrimino)
+    }
+    
 }
+
