@@ -14,6 +14,7 @@ class Tetrimino {
     var blocks: [Block] = []
     var isStopped: Bool = false
     var size: CGSize = CGSizeZero
+    var point: CGPoint = CGPointZero
     
     init(type: TetriminoType = .None, game: Game) {
         self.type = type
@@ -47,14 +48,42 @@ class Tetrimino {
     }
     
     func dispose() {
-        
+        self.blocks = []
+        self.size = CGSizeZero
+        self.point = CGPointZero
     }
     
     func update(dest: CGPoint) {
-        for b in self.blocks {
-            b.setDestination(dest)
-        }
+        let diff = dest - self.point
+        self.updateFromDiff(diff)
     }
+    
+    func updateFromDiff(diff: CGPoint) {
+        for b in self.blocks {
+            b.setDestinationFromDiff(diff)
+        }
+        
+        self.point = self.point + diff
+    }
+    
+    func moveTo(w: World) -> Bool {
+        var isBound: Bool = false
+        for b in self.blocks {
+            if (b.hasUpdated()) {
+                b.moveTo(w)
+                println("$$$$$$$$$ \(b.frame.origin)")
+                isBound = isBound || b.isBound
+                if (b.isBound) {
+                    println("Stop \(b.frame.origin)")
+                }
+                
+                b.reset()
+            }
+        }
+        
+        return isBound
+    }
+   
     
     static func createO(tetrimino: Tetrimino) -> [Block]{
         var ret: [Block] = []

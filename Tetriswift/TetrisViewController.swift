@@ -19,16 +19,13 @@ class TetrisViewController: UIViewController {
     var tetrimino: Tetrimino?
     var game: Game?
     var world: World?
-    var blocks: [Block] = []
     
     @IBAction func Start(sender: AnyObject) {
+        println("w, h: \(self.view.frame)")
         game = Game(width: self.view.frame.width, height: self.view.frame.height)
         world = game!.world
         factory = TetriminoFactory(game: game!)
         tetrimino = factory!.create(self.view)
-        for b in tetrimino!.blocks {
-            blocks.append(b)
-        }
         game!.start()
         NSTimer.scheduledTimerWithTimeInterval(Double(1.0 / Double(Rate)), target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
         StatButton.hidden = true
@@ -47,34 +44,15 @@ class TetrisViewController: UIViewController {
         self.timeCount += 1
         
         if (self.isTimeToMove(timeCount)) {
-            for b in tetrimino!.blocks {
-                b.dest = b.dest + CGPointMake(0, Game.unit)
-            }
-            
+            tetrimino!.updateFromDiff(CGPointMake(0, Game.unit))
             self.timeCount = 0
         }
         
-        var isBound: Bool = false
-        for b in tetrimino!.blocks {
-            if (b.isMoving()) {
-                b.moveTo(world!)
-                println("$$$$$$$$$ \(b.frame.origin)")
-                isBound = isBound && b.isBound
-                if (b.isBound) {
-                    println("Stop \(b.frame.origin)")
-                }
-                
-                b.reset()
-            }
-        }
-        
+        let isBound: Bool = tetrimino!.moveTo(world!)
         if (isBound) {
-            for b in tetrimino!.blocks {
-                b.stop()
-            }
-            
             world!.putTetrimino(tetrimino!)
             world!.removeLine()
+            tetrimino!.dispose()
             tetrimino = factory!.create(self.view)
         }
     }

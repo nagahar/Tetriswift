@@ -13,7 +13,7 @@ class Block: UIView {
     var tetrimino: Tetrimino?
     var isBound: Bool = false
     
-    var worigin: (row: Int, column: Int) {
+    var origin_w: (row: Int, column: Int) {
         get {
             return Game.convert(self.frame.origin)
         }
@@ -47,49 +47,29 @@ class Block: UIView {
         self.removeFromSuperview()
     }
     
-    func isMoving() -> Bool {
+    func hasUpdated() -> Bool {
         return !CGPointEqualToPoint(dest, self.frame.origin)
     }
     
     func moveTo(w: World) {
-        //let x = w.normalize(dest.x, max: w.width - self.frame.width)
-        //let y = w.normalize(dest.y, max: w.height - self.frame.height)
-        //let pos = CGPointMake(x == -1 ? self.frame.origin.x: x , y == -1 ? self.frame.origin.y: y)
-        
-        let converted = self.frame.origin + self.dest
-        let s = CGRect(origin: converted, size: self.frame.size)
-        let tuple = Game.convert(s)
-        println(self.frame.origin)
-        println(converted)
-        if (w.isMovable(tuple)) {
+        let point = Game.convert(self.dest)
+        println("origin: \(self.frame.origin)")
+        println("dest: \(self.dest)")
+        if (w.isMovable(point)) {
+            println("Move")
             translate(self.dest - self.frame.origin)
-            // TODO: 接地check
-            self.isBound = false
-        } else {
-            self.isBound = true
         }
-    }
-    
-    func limitCheck(row: Int, column: Int, height: Int, width: Int) -> Bool {
-     /*
-        if (World.blocks.count == maxRow) {
-            println("Put Boundary**********")
-            return false
-        }
-
-        if (World.blocks.count < maxRow || World.blocks.first!.count < maxCol) {
-            println("Overflow**********")
-            return false
-        }
-*/
         
-        return true
+        if (World.rows - 2 < point.row) {
+            self.isBound = true
+        } else {
+            self.isBound = false
+        }
     }
     
     func translate(p: CGPoint) {
         self.transform = CGAffineTransformTranslate(self.transform, p.x , p.y)
     }
-    
     
     func reset() {
         dest = self.frame.origin
@@ -108,20 +88,20 @@ class Block: UIView {
     }
     
     func stop() {
-        let diff = getDiff()
-        self.center = diff + self.center
+        //let diff = getDiff()
+        //self.center = diff + self.center
         self.reset()
-        println("post: \(self.center)")
+        //println("post: \(self.center)")
     }
     
-    func setDestination(dest: CGPoint) {
-        self.dest = normalize(dest)
+    func setDestinationFromDiff(diff: CGPoint) {
+        self.dest = self.frame.origin + diff
         println("set dest \(self.dest)")
     }
     
     override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch: AnyObject in touches {
-            self.tetrimino!.update(touch.locationInView(self.superview))
+            self.update(touch.locationInView(self.superview))
         }
     }
     
@@ -137,9 +117,15 @@ class Block: UIView {
         println(tetrimino!.game.height)
         println(tetrimino!.game.width)
         println(self.frame.height)
-        self.tetrimino!.update(CGPointMake(0, tetrimino!.game.height))
+        self.update(CGPointMake(0, tetrimino!.game.height))
     }
     
+    func update(dest: CGPoint) {
+        let p = Game.normalize(dest, current: self.tetrimino!.point)
+        self.tetrimino!.update(p)
+    }
+    
+    /*
     func normalize(p: CGFloat, max: CGFloat) -> CGFloat {
         let ret = Game.unit * floor(p / Game.unit)
         if (ret < 0) {
@@ -153,8 +139,10 @@ class Block: UIView {
     }
     
     private func normalize(loc: CGPoint) -> CGPoint {
-        let x = normalize(loc.x, max: tetrimino!.game.width - self.frame.width)
-        let y = normalize(loc.y, max: tetrimino!.game.height - self.frame.height)
-        return CGPointMake(x, y)
+        let p = Game.convert(loc)
+        //let x = normalize(loc.x, max: tetrimino!.game.width - self.frame.width)
+        //let y = normalize(loc.y, max: tetrimino!.game.height - self.frame.height)
+        return CGPointMake(p.row * , y)
     }
+*/
 }

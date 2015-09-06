@@ -18,7 +18,9 @@ class Game {
         self.width = width
         self.height = height
         world = World.getInstance()
-        Game.unit = floor(width / CGFloat(World.columns))
+        let x = floor(width / CGFloat(World.columns))
+        let y = floor(height / CGFloat(World.rows))
+        Game.unit = x < y ? x : y
         println("unit = \(Game.unit)")
     }
     
@@ -26,19 +28,35 @@ class Game {
         println("start")
     }
     
+    static func normalize(dest: CGPoint, current: CGPoint) -> CGPoint {
+        let y = dest.y < current.y ? current.y : dest.y
+        let p = Game.convert(CGPointMake(dest.x, y))
+        return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
+    }
+    
     static func convert(val: CGPoint) -> (row: Int, column: Int) {
-        return (convert(val.y), convert(val.x))
+        var row = convert(val.y)
+        var col = convert(val.x)
+        if (World.rows - 1 < row) {
+            row = World.rows - 1
+        } else if (row < 0) {
+            row = 0
+        } else {
+            // nothing
+        }
+        
+        if (World.columns - 1 < col) {
+            col = World.columns - 1
+        } else if (col < 0) {
+            col = 0
+        } else {
+            // nothing
+        }
+        
+        return (row, col)
     }
     
     static func convert(val: CGFloat) -> Int {
         return Int(floor(val / Game.unit))
-    }
-    
-    static func convert(o: CGRect) -> (row: Int, column: Int, height: Int, width: Int) {
-        let xi = self.convert(o.origin.x)
-        let maxX = convert(o.width)
-        let yi = self.convert(o.origin.y)
-        let maxY = convert(o.height)
-        return (yi, xi, maxY, maxX)
     }
 }

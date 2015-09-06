@@ -25,10 +25,10 @@ class World {
         return World.sharedInstance
     }
     
-    
     func putTetrimino(tetrimino: Tetrimino) {
         for b in tetrimino.blocks {
-            let p = b.worigin
+                b.stop()
+            let p = b.origin_w
             World.blocks[p.row][p.column] = b
         }
         
@@ -65,16 +65,10 @@ class World {
         
     }
     
-    
-    func isMovable(tuple: (row: Int, column: Int, height: Int, width: Int)) -> Bool {
-        let maxRow = tuple.row + tuple.height
-        let maxCol = tuple.column + tuple.width
-       
-        for i in tuple.row..<maxRow {
-            for j in tuple.column..<maxCol {
-                if let b = World.blocks[i][j] {
-                    return false
-                }
+    func isMovable(tuple: (row: Int, column: Int)) -> Bool {
+        if (tuple.row<World.rows && tuple.column < World.columns) {
+            if let b = World.blocks[tuple.row][tuple.column] {
+                return false
             }
         }
         
