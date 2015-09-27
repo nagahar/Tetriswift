@@ -59,6 +59,15 @@ class Tetrimino {
     }
     
     func updateFromDiff(diff: CGPoint) {
+        
+        for b in self.blocks {
+            // check negative value
+            let p = b.frame.origin + diff
+            if (p.x < 0 || p.y < 0) {
+                return
+            }
+        }
+        
         for b in self.blocks {
             b.setDestinationFromDiff(diff)
         }
@@ -66,24 +75,39 @@ class Tetrimino {
         self.point = self.point + diff
     }
     
+    func sortBlocks() -> [Block] {
+        // yの大きい順
+        return self.blocks.sort({(a: Block, b: Block) -> Bool in
+            return (a.frame.origin.y < b.frame.origin.y)
+        })
+    }
+    
     func moveTo(w: World) -> Bool {
         var isBound: Bool = false
-        for b in self.blocks {
+        let s = sortBlocks()
+        for b in s {
             if (b.hasUpdated()) {
                 b.moveTo(w)
-                println("$$$$$$$$$ \(b.frame.origin)")
-                isBound = isBound || b.isBound
+                print("move from \(b.frame.origin)")
                 if (b.isBound) {
-                    println("Stop \(b.frame.origin)")
+                    print("Stop \(b.frame.origin)")
+                    w.putBlock(b)
                 }
                 
+                isBound = isBound || b.isBound
                 b.reset()
+            }
+        }
+        
+        if (isBound) {
+            for b in s {
+                w.putBlock(b)
             }
         }
         
         return isBound
     }
-   
+    
     
     static func createO(tetrimino: Tetrimino) -> [Block]{
         var ret: [Block] = []

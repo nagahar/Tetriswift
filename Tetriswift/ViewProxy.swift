@@ -17,7 +17,7 @@ class ViewProxy: UIView {
         super.init(frame: CGRectZero)
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

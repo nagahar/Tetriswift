@@ -21,7 +21,7 @@ class TetrisViewController: UIViewController {
     var world: World?
     
     @IBAction func Start(sender: AnyObject) {
-        println("w, h: \(self.view.frame)")
+        print("w, h: \(self.view.frame)")
         game = Game(width: self.view.frame.width, height: self.view.frame.height)
         world = game!.world
         factory = TetriminoFactory(game: game!)
@@ -50,7 +50,6 @@ class TetrisViewController: UIViewController {
         
         let isBound: Bool = tetrimino!.moveTo(world!)
         if (isBound) {
-            world!.putTetrimino(tetrimino!)
             world!.removeLine()
             tetrimino!.dispose()
             tetrimino = factory!.create(self.view)

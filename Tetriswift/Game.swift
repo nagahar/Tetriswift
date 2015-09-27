@@ -21,11 +21,11 @@ class Game {
         let x = floor(width / CGFloat(World.columns))
         let y = floor(height / CGFloat(World.rows))
         Game.unit = x < y ? x : y
-        println("unit = \(Game.unit)")
+        print("unit = \(Game.unit)")
     }
     
     func start() {
-        println("start")
+        print("start")
     }
     
     static func normalize(dest: CGPoint, current: CGPoint) -> CGPoint {
