@@ -28,9 +28,18 @@ class Game {
         print("start")
     }
     
+    static func getTopY(x: CGFloat) -> CGFloat {
+        let row = World.getTopRow(Game.convert(x))
+        return CGFloat(row) * Game.unit
+    }
+    
     static func normalize(dest: CGPoint, current: CGPoint) -> CGPoint {
         let y = dest.y < current.y ? current.y : dest.y
-        let p = Game.convert(CGPointMake(dest.x, y))
+        return Game.normalize(CGPointMake(dest.x, y))
+    }
+    
+    static func normalize(dest: CGPoint) -> CGPoint {
+        let p = Game.convert(dest)
         return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
     }
     

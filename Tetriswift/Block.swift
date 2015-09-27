@@ -113,7 +113,8 @@ class Block: UIView {
         print(tetrimino!.game.height)
         print(tetrimino!.game.width)
         print(self.frame.height)
-        self.update(CGPointMake(0, tetrimino!.game.height))
+        let topy = Game.getTopY(self.frame.origin.x)
+        self.update(CGPointMake(0, topy))
     }
     
     func update(dest: CGPoint) {

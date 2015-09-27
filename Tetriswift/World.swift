@@ -25,6 +25,20 @@ class World {
         return World.sharedInstance
     }
     
+    static func getTopRow(col: Int) -> Int {
+        if (col < 0 || World.columns - 1 < col) {
+            return 0
+        }
+        
+        for i in 0..<World.rows {
+            if let _ = World.blocks[i][col] {
+                return i
+            }
+        }
+        
+        return 0
+    }
+    
     func putBlock(b: Block) {
         if (!b.isStopped) {
             b.stop()
