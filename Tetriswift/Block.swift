@@ -113,7 +113,6 @@ class Block: UIView {
                 }
             }
         } else {
-            print("CCCCCCCCCC move")
         }
     }
     
