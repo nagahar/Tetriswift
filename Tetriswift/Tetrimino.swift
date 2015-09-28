@@ -55,6 +55,8 @@ class Tetrimino {
     
     func update(dest: CGPoint) {
         let diff = dest - self.point
+        print(self.point)
+        print(diff)
         self.updateFromDiff(diff)
     }
     
@@ -73,10 +75,11 @@ class Tetrimino {
         }
         
         self.point = self.point + diff
+        print("%%%%%%%%%%%%%")
+        print(self.point)
     }
     
     func sortBlocks() -> [Block] {
-        // yの大きい順
         return self.blocks.sort({(a: Block, b: Block) -> Bool in
             return (a.frame.origin.y < b.frame.origin.y)
         })

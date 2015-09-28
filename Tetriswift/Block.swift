@@ -58,7 +58,7 @@ class Block: UIView {
         print("origin: \(self.frame.origin)")
         print("dest: \(self.dest)")
         self.isBound = true
-        if (w.isMoved(dst)) {
+        if (w.hasSpace(dst)) {
             print("Move")
             translate(self.dest - self.frame.origin)
             self.isBound = w.isBound(dst)
@@ -96,8 +96,24 @@ class Block: UIView {
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        for touch: AnyObject in touches {
-            self.update(touch.locationInView(self.superview))
+        self.move(touches, withEvent: event)
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.move(touches, withEvent: event)
+    }
+    
+    func move(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        // avoid duplicated update
+        if (!hasUpdated()) {
+            if (event!.touchesForView(self) != nil) {
+                print("###\(touches.count)")
+                for touch: AnyObject in touches {
+                    self.update(touch.locationInView(self.superview))
+                }
+            }
+        } else {
+            print("CCCCCCCCCC move")
         }
     }
     
@@ -109,12 +125,24 @@ class Block: UIView {
     
     func doubleTapped(sender: UITapGestureRecognizer)
     {
-        print("TTTTTTTTTTTT")
-        print(tetrimino!.game.height)
-        print(tetrimino!.game.width)
-        print(self.frame.height)
-        let topy = Game.getTopY(self.frame.origin.x)
-        self.update(CGPointMake(0, topy))
+        // avoid duplicated update
+        if (!hasUpdated()) {
+            print(tetrimino!.game.height)
+            print(tetrimino!.game.width)
+            print(self.frame.height)
+            var topy: CGFloat = CGFloat.max
+            for b in tetrimino!.blocks {
+                let t = Game.getTopY(b.frame.origin.x)
+                if t < topy {
+                    topy = t
+                }
+            }
+            
+            print("TTTTTTTTTTTT\(topy)")
+            self.update(CGPointMake(tetrimino!.point.x, topy - tetrimino!.size.height))
+        } else {
+            print("CCCCCCCCCC tapped")
+        }
     }
     
     func update(dest: CGPoint) {

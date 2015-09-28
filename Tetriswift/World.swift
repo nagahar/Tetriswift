@@ -36,7 +36,7 @@ class World {
             }
         }
         
-        return 0
+        return World.rows
     }
     
     func putBlock(b: Block) {
@@ -88,7 +88,7 @@ class World {
         }
     }
     
-    func isMoved(tuple: (row: Int, column: Int)) -> Bool {
+    func hasSpace(tuple: (row: Int, column: Int)) -> Bool {
         if (tuple.row < 0
             || tuple.column < 0
             || World.rows - 1 < tuple.row
