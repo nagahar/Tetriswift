@@ -112,7 +112,6 @@ class Block: UIView {
                     self.update(touch.locationInView(self.superview))
                 }
             }
-        } else {
         }
     }
     
