@@ -33,13 +33,9 @@ class Game {
         return CGFloat(row) * Game.unit
     }
     
-    static func normalize(dest: CGPoint, current: CGPoint) -> CGPoint {
-        let y = dest.y < current.y ? current.y : dest.y
-        return Game.normalize(CGPointMake(dest.x, y))
-    }
-    
-    static func normalize(dest: CGPoint) -> CGPoint {
-        let p = Game.convert(dest)
+    static func normalize(diff: CGPoint, b: Block) -> CGPoint {
+        let y = diff.y < 0 ? 0 : diff.y
+        let p = Game.convert(CGPointMake(diff.x + b.frame.origin.x ,y + b.frame.origin.y))
         return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
     }
     

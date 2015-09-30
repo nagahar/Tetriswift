@@ -11,14 +11,10 @@ import UIKit
 class Block: UIView {
     var dest: CGPoint = CGPointZero
     var tetrimino: Tetrimino?
-    var isBound: Bool = false
+    var isGround: Bool = false
     var isStopped: Bool = false
-    
-    var origin_w: (row: Int, column: Int) {
-        get {
-            return Game.convert(self.frame.origin)
-        }
-    }
+    var isTouchStarted: Bool = false
+    var start: CGPoint = CGPointZero
     
     init () {
         super.init(frame: CGRectZero)
@@ -53,15 +49,18 @@ class Block: UIView {
     }
     
     func moveTo(w: World) {
-        let dst = Game.convert(self.dest)
-        //let cur = Game.convert(self.frame.origin)
         print("origin: \(self.frame.origin)")
         print("dest: \(self.dest)")
-        self.isBound = true
-        if (w.hasSpace(dst)) {
-            print("Move")
-            translate(self.dest - self.frame.origin)
-            self.isBound = w.isBound(dst)
+        let wdst = Game.convert(self.dest)
+        self.isGround = true
+        if (w.hasSpace(wdst)) {
+            print("MMMMMMMMMMMMMMMM")
+            self.translate(self.dest - self.frame.origin)
+            self.isGround = w.isBound(wdst)
+            if (self.isGround) {
+                print("Stop \(self.frame.origin)")
+                w.putBlock(self)
+            }
         }
     }
     
@@ -91,27 +90,31 @@ class Block: UIView {
     }
     
     func setDestinationFromDiff(diff: CGPoint) {
-        self.dest = self.frame.origin + diff
+        self.dest = Game.normalize(diff, b: self)
         print("set dest \(self.dest)")
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.isTouchStarted = true
+        if let touch = touches.first {
+            self.start = touch.locationInView(self.superview)
+        }
+    }
+    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.move(touches, withEvent: event)
+        self.update(touches, withEvent: event)
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.move(touches, withEvent: event)
+        self.update(touches, withEvent: event)
+        self.isTouchStarted = false
     }
     
-    func move(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        // avoid duplicated update
-        if (!hasUpdated()) {
-            if (event!.touchesForView(self) != nil) {
-                print("###\(touches.count)")
-                for touch: AnyObject in touches {
-                    self.update(touch.locationInView(self.superview))
-                }
-            }
+    
+    func update(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if let touch = touches.first {
+            print("###\(touches.count)")
+            self.update(touch.locationInView(self.superview) - self.tetrimino!.blocks.first!.frame.origin)
         }
     }
     
@@ -121,52 +124,27 @@ class Block: UIView {
         self.addGestureRecognizer(doubleTap)
     }
     
-    func doubleTapped(sender: UITapGestureRecognizer)
-    {
-        // avoid duplicated update
-        if (!hasUpdated()) {
-            print(tetrimino!.game.height)
-            print(tetrimino!.game.width)
-            print(self.frame.height)
-            var topy: CGFloat = CGFloat.max
-            for b in tetrimino!.blocks {
-                let t = Game.getTopY(b.frame.origin.x)
-                if t < topy {
-                    topy = t
-                }
+    func doubleTapped(sender: UITapGestureRecognizer) {
+        print(tetrimino!.game.height)
+        print(tetrimino!.game.width)
+        print(self.frame.height)
+        var topy = (b: tetrimino!.blocks.first!, y: CGFloat.max)
+        let s = tetrimino!.sortDescBlocks()
+        for b in s {
+            let t = Game.getTopY(b.frame.origin.x)
+            if t < topy.y {
+                topy.y = t
+                topy.b = b
             }
-            
-            print("TTTTTTTTTTTT\(topy)")
-            self.update(CGPointMake(tetrimino!.point.x, topy - tetrimino!.size.height))
-        } else {
-            print("CCCCCCCCCC tapped")
         }
+        
+        print("CCCCCCCCCC tapped \(topy.y): \(topy.b.frame.origin.y)")
+        self.update(CGPointMake(0, topy.y - topy.b.frame.height - topy.b.frame.origin.y))
     }
     
-    func update(dest: CGPoint) {
-        print("$$$$$$$$$ \(dest)")
-        let p = Game.normalize(dest, current: self.tetrimino!.point)
-        self.tetrimino!.update(p)
+    func update(diff: CGPoint) {
+        print("$$$$$$$$$ \(diff)")
+        //let p = Game.normalize(diff)
+        self.tetrimino!.updateFromDiff(diff)
     }
-    
-    /*
-    func normalize(p: CGFloat, max: CGFloat) -> CGFloat {
-    let ret = Game.unit * floor(p / Game.unit)
-    if (ret < 0) {
-    return 0
-    } else if (max < ret) {
-    // tetriminoの形状から正しいmaxを返す
-    return max
-    } else {
-    return ret
-    }
-    }
-    
-    private func normalize(loc: CGPoint) -> CGPoint {
-    let p = Game.convert(loc)
-    //let x = normalize(loc.x, max: tetrimino!.game.width - self.frame.width)
-    //let y = normalize(loc.y, max: tetrimino!.game.height - self.frame.height)
-    return CGPointMake(p.row * , y)
-    }
-    */
 }

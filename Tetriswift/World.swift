@@ -42,7 +42,7 @@ class World {
     func putBlock(b: Block) {
         if (!b.isStopped) {
             b.stop()
-            let p = b.origin_w
+            let p = Game.convert(b.frame.origin)
             World.blocks[p.row][p.column] = b
         }
         

@@ -13,8 +13,8 @@ class Tetrimino {
     let game: Game
     var blocks: [Block] = []
     var isStopped: Bool = false
-    var size: CGSize = CGSizeZero
-    var point: CGPoint = CGPointZero
+    var bounds: CGRect = CGRectZero
+    var dest: CGRect = CGRectZero
     
     init(type: TetriminoType = .None, game: Game) {
         self.type = type
@@ -49,84 +49,58 @@ class Tetrimino {
     
     func dispose() {
         self.blocks = []
-        self.size = CGSizeZero
-        self.point = CGPointZero
-    }
-    
-    func update(dest: CGPoint) {
-        let diff = dest - self.point
-        print(self.point)
-        print(diff)
-        self.updateFromDiff(diff)
     }
     
     func updateFromDiff(diff: CGPoint) {
-        
-        for b in self.blocks {
-            // check negative value
-            let p = b.frame.origin + diff
-            if (p.x < 0 || p.y < 0) {
-                return
-            }
-        }
-        
         for b in self.blocks {
             b.setDestinationFromDiff(diff)
         }
         
-        self.point = self.point + diff
-        print("%%%%%%%%%%%%%")
-        print(self.point)
+        let p = self.bounds.origin + diff
+        self.dest = CGRectMake(p.x, p.y, 0, 0)
     }
     
-    func sortBlocks() -> [Block] {
+    func sortDescBlocks() -> [Block] {
         return self.blocks.sort({(a: Block, b: Block) -> Bool in
-            return (a.frame.origin.y < b.frame.origin.y)
+            return (a.frame.origin.y > b.frame.origin.y)
         })
     }
     
     func moveTo(w: World) -> Bool {
-        var isBound: Bool = false
-        let s = sortBlocks()
+        var isGround: Bool = false
+        let s = self.sortDescBlocks()
         for b in s {
             if (b.hasUpdated()) {
-                b.moveTo(w)
                 print("move from \(b.frame.origin)")
-                if (b.isBound) {
-                    print("Stop \(b.frame.origin)")
-                    w.putBlock(b)
-                }
-                
-                isBound = isBound || b.isBound
+                b.moveTo(w)
+                isGround = isGround || b.isGround
                 b.reset()
             }
         }
         
-        if (isBound) {
+        if (isGround) {
             for b in s {
                 w.putBlock(b)
             }
         }
         
-        return isBound
+        return isGround
     }
     
+    static let p_00: CGPoint = CGPointMake(0, 0)
+    static let p_01: CGPoint = CGPointMake(0, Game.unit)
+    static let p_10: CGPoint = CGPointMake(Game.unit, 0)
+    static let p_11: CGPoint = CGPointMake(0, Game.unit)
     
     static func createO(tetrimino: Tetrimino) -> [Block]{
         var ret: [Block] = []
-        let u = Game.unit
         //let c = UIColor.yellowColor()
         let c = UIColor.blueColor()
-        ret.append(createBlock(CGPointMake(0, 0), color: c, tetrimino: tetrimino))
-        ret.append(createBlock(CGPointMake(0, u), color: c, tetrimino: tetrimino))
-        ret.append(createBlock(CGPointMake(u, 0), color: c, tetrimino: tetrimino))
-        ret.append(createBlock(CGPointMake(u, u), color: c, tetrimino: tetrimino))
-        tetrimino.size = CGSizeMake(2 * u, 2 * u)
+        ret.append(Block(o: p_00, c: c, t: tetrimino))
+        ret.append(Block(o: p_01, c: c, t: tetrimino))
+        ret.append(Block(o: p_10, c: c, t: tetrimino))
+        ret.append(Block(o: p_11, c: c, t: tetrimino))
         return ret
-    }
-    
-    static func createBlock(origin: CGPoint, color: UIColor, tetrimino: Tetrimino) -> Block {
-        return Block(o: origin, c: color, t: tetrimino)
     }
     
 }

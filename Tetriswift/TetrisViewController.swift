@@ -46,6 +46,7 @@ class TetrisViewController: UIViewController {
         if (self.isTimeToMove(timeCount)) {
             tetrimino!.updateFromDiff(CGPointMake(0, Game.unit))
             self.timeCount = 0
+            //NSLog("%s, %d", __FUNCTION__, __LINE__)
         }
         
         let isBound: Bool = tetrimino!.moveTo(world!)
