@@ -13,7 +13,6 @@ class Block: UIView {
     var tetrimino: Tetrimino?
     var isGround: Bool = false
     var isStopped: Bool = false
-    var isTouchStarted: Bool = false
     var start: CGPoint = CGPointZero
     
     init () {
@@ -33,7 +32,6 @@ class Block: UIView {
         super.init(frame: CGRectMake(o.x, o.y, Game.unit, Game.unit))
         self.backgroundColor = c
         self.reset()
-        self.addDoubleTap("doubleTapped:")
     }
     
     deinit {
@@ -44,10 +42,7 @@ class Block: UIView {
         self.removeFromSuperview()
     }
     
-    func hasUpdated() -> Bool {
-        return !CGPointEqualToPoint(dest, self.frame.origin)
-    }
-    
+    /*
     func moveTo(w: World) {
         print("origin: \(self.frame.origin)")
         print("dest: \(self.dest)")
@@ -63,23 +58,16 @@ class Block: UIView {
             }
         }
     }
+*/
     
-    func translate(p: CGPoint) {
-        self.transform = CGAffineTransformTranslate(self.transform, p.x , p.y)
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("@@@@@@@@@")
     }
     
     func reset() {
         dest = self.frame.origin
     }
-    
-    func rightRotate() {
-        
-    }
-    
-    func leftRotate() {
-        
-    }
-    
+   
     func getDiff () -> CGPoint {
         return self.frame.origin - CGPointMake(0, 0)
     }
@@ -93,58 +81,6 @@ class Block: UIView {
         self.dest = Game.normalize(diff, b: self)
         print("set dest \(self.dest)")
     }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.isTouchStarted = true
-        if let touch = touches.first {
-            self.start = touch.locationInView(self.superview)
-        }
-    }
-    
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.update(touches, withEvent: event)
-    }
-    
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.update(touches, withEvent: event)
-        self.isTouchStarted = false
-    }
-    
-    
-    func update(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            print("###\(touches.count)")
-            self.update(touch.locationInView(self.superview) - self.tetrimino!.blocks.first!.frame.origin)
-        }
-    }
-    
-    func addDoubleTap(selector: Selector) {
-        let doubleTap = UITapGestureRecognizer(target: self, action: selector)
-        doubleTap.numberOfTapsRequired = 2
-        self.addGestureRecognizer(doubleTap)
-    }
-    
-    func doubleTapped(sender: UITapGestureRecognizer) {
-        print(tetrimino!.game.height)
-        print(tetrimino!.game.width)
-        print(self.frame.height)
-        var topy = (b: tetrimino!.blocks.first!, y: CGFloat.max)
-        let s = tetrimino!.sortDescBlocks()
-        for b in s {
-            let t = Game.getTopY(b.frame.origin.x)
-            if t < topy.y {
-                topy.y = t
-                topy.b = b
-            }
-        }
-        
-        print("CCCCCCCCCC tapped \(topy.y): \(topy.b.frame.origin.y)")
-        self.update(CGPointMake(0, topy.y - topy.b.frame.height - topy.b.frame.origin.y))
-    }
-    
-    func update(diff: CGPoint) {
-        print("$$$$$$$$$ \(diff)")
-        //let p = Game.normalize(diff)
-        self.tetrimino!.updateFromDiff(diff)
-    }
+   
+  
 }

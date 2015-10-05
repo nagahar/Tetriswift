@@ -40,6 +40,13 @@ class TetrisViewController: UIViewController {
         return true
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if let touch = touches.first {
+        print("\(touch.view)")
+        }
+        print("@@@@@@@@@")
+    }
+    
     func onUpdate(timer: NSTimer) {
         self.timeCount += 1
         
@@ -49,10 +56,10 @@ class TetrisViewController: UIViewController {
             //NSLog("%s, %d", __FUNCTION__, __LINE__)
         }
         
-        let isBound: Bool = tetrimino!.moveTo(world!)
-        if (isBound) {
+        let isGround: Bool = tetrimino!.moveTo(world!)
+        if (isGround) {
             world!.removeLine()
-            tetrimino!.dispose()
+            tetrimino!.dispose(self.view)
             tetrimino = factory!.create(self.view)
         }
     }

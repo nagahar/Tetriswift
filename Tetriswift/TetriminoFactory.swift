@@ -17,10 +17,7 @@ class TetriminoFactory {
     
     func create(parent : UIView) -> Tetrimino {
         let t = Tetrimino(type: TetriminoType.O, game: self.game)
-        for b in t.blocks {
-            parent.addSubview(b)
-        }
-        
+        parent.addSubview(t)
         return t
     }
 }

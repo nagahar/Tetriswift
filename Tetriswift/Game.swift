@@ -28,8 +28,8 @@ class Game {
         print("start")
     }
     
-    static func getTopY(x: CGFloat) -> CGFloat {
-        let row = World.getTopRow(Game.convert(x))
+    static func getLowest(x: CGFloat) -> CGFloat {
+        let row = World.getLowest(Game.convert(x))
         return CGFloat(row) * Game.unit
     }
     

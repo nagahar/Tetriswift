@@ -25,7 +25,7 @@ class World {
         return World.sharedInstance
     }
     
-    static func getTopRow(col: Int) -> Int {
+    static func getLowest(col: Int) -> Int {
         if (col < 0 || World.columns - 1 < col) {
             return 0
         }
@@ -78,7 +78,7 @@ class World {
         */
     }
     
-    func isBound(tuple: (row: Int, column: Int)) -> Bool {
+    func isGround(tuple: (row: Int, column: Int)) -> Bool {
         if (tuple.row == World.rows - 1) {
             return true
         } else if let _ = World.blocks[tuple.row + 1][tuple.column] {
