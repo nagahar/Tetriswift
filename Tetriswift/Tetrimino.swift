@@ -42,7 +42,7 @@ class Tetrimino: UIView {
         }
         
         self.addDoubleTap("doubleTapped:")
-        self.userInteractionEnabled = true
+        self.backgroundColor = UIColor.yellowColor()
     }
     
     deinit {
@@ -52,7 +52,7 @@ class Tetrimino: UIView {
     private static func getSize(type: TetriminoType) -> CGRect {
         switch type {
         case .O:
-            return CGRectMake(0, 0, Game.unit, Game.unit)
+            return CGRectMake(0, 0, Game.unit * 2, Game.unit * 2)
         case .I:
             return CGRectZero
         case .S:
@@ -134,7 +134,7 @@ class Tetrimino: UIView {
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("@@@@@@@@@")
     }
-        
+    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.update(touches, withEvent: event)
     }
@@ -190,4 +190,3 @@ class Tetrimino: UIView {
         
     }
 }
-

@@ -32,6 +32,8 @@ class Block: UIView {
         super.init(frame: CGRectMake(o.x, o.y, Game.unit, Game.unit))
         self.backgroundColor = c
         self.reset()
+        // to capture event on super view
+        self.userInteractionEnabled = false
     }
     
     deinit {

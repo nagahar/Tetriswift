@@ -42,7 +42,7 @@ class TetrisViewController: UIViewController {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touch = touches.first {
-        print("\(touch.view)")
+            print("\(touch.view)")
         }
         print("@@@@@@@@@")
     }
