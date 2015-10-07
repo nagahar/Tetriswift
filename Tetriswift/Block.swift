@@ -12,8 +12,6 @@ class Block: UIView {
     var dest: CGPoint = CGPointZero
     var tetrimino: Tetrimino?
     var isGround: Bool = false
-    var isStopped: Bool = false
-    var start: CGPoint = CGPointZero
     
     init () {
         super.init(frame: CGRectZero)
@@ -61,6 +59,9 @@ class Block: UIView {
         }
     }
 */
+    func locationInView(parent: UIView) -> CGPoint {
+        return self.frame.origin + parent.frame.origin
+    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("@@@@@@@@@")
@@ -74,15 +75,10 @@ class Block: UIView {
         return self.frame.origin - CGPointMake(0, 0)
     }
     
-    func stop() {
-        self.reset()
-        self.isStopped = true
-    }
-    
+    /*
     func setDestinationFromDiff(diff: CGPoint) {
-        self.dest = Game.normalize(diff, b: self)
+        self.dest = Game.normalize(diff, v: self)
         print("set dest \(self.dest)")
     }
-   
-  
+*/
 }

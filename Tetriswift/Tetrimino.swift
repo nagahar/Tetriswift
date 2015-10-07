@@ -46,7 +46,7 @@ class Tetrimino: UIView {
     }
     
     deinit {
-        dispose(self)
+        dispose()
     }
     
     private static func getSize(type: TetriminoType) -> CGRect {
@@ -91,16 +91,45 @@ class Tetrimino: UIView {
         }
     }
     
-    func dispose(parent: UIView) {
+    func dispose() {
+        self.removeFromSuperview()
         for b in self.blocks {
-            parent.addSubview(b)
+            b.removeFromSuperview()
         }
         
         self.blocks = []
+        NSLog("%s, %d", __FUNCTION__, __LINE__)
+    }
+    
+    func replace(parent: UIView, w: World) {
+        self.removeFromSuperview()
+        Tetrimino.reset(self, p: parent, w: w)
     }
     
     func updateFromDiff(diff: CGPoint) {
-        self.dest = self.frame.origin + diff
+        self.dest = Game.normalize(diff, v: self)
+    }
+    
+    func hasSpace(w: World) -> Bool {
+        var ret: Bool = false
+        for b in self.blocks {
+            ret = ret || w.hasSpace(convert(b))
+        }
+        
+        return ret
+    }
+    
+    func isGround(w: World) -> Bool {
+        var ret: Bool = false
+        for b in self.blocks {
+            ret = ret || w.isGround(convert(b))
+        }
+        
+        return ret
+    }
+    
+    func convert(b: Block) -> (Int, Int) {
+        return Game.convert(b.locationInView(self))
     }
     
     func moveTo(w: World) -> Bool {
@@ -108,17 +137,10 @@ class Tetrimino: UIView {
         if (Util.hasUpdated(self.dest, v: self)) {
             print("move from \(self.frame.origin)")
             print("dest: \(self.dest)")
-            let p = Game.convert(self.dest)
-            if (w.hasSpace(p)) {
+            if (self.hasSpace(w)) {
                 print("MMMMMMMMMMMMMMMM")
                 Util.translate(self.dest - self.frame.origin, v: self)
-                isGround = w.isGround(p)
-                if (isGround) {
-                    print("Stop \(self.frame.origin)")
-                    for b in self.blocks {
-                        w.putBlock(b)
-                    }
-                }
+                isGround = self.isGround(w)
             }
         }
         
@@ -149,7 +171,7 @@ class Tetrimino: UIView {
         }
     }
     
-    static func createO(tetrimino: Tetrimino) -> [Block]{
+    static func createO(tetrimino: Tetrimino) -> [Block] {
         var block: [Block] = []
         //let c = UIColor.yellowColor()
         let c = UIColor.blueColor()
@@ -160,20 +182,24 @@ class Tetrimino: UIView {
         return block
     }
     
-    func doubleTapped(sender: UITapGestureRecognizer) {
-        print(self.game.height)
-        print(self.game.width)
-        print(self.frame.height)
-        var lowest = CGFloat.max
-        for var i = self.frame.origin.x; i < self.frame.origin.x + self.frame.size.width; i = Game.unit {
-            let t = Game.getLowest(i)
-            if t < lowest {
-                lowest = t
-            }
+    
+    static func reset(t: Tetrimino, p: UIView, w: World) {
+        for b in t.blocks {
+            b.frame.origin = b.locationInView(t)
+            b.removeFromSuperview()
+            p.addSubview(b)
+            w.putBlock(b)
+            print("@@@@@@@\(b.frame.origin)")
         }
-        
+    }
+    
+    func doubleTapped(sender: UITapGestureRecognizer) {
+        print("DDDDDDDDDDDDDDDD")
+        let lowest = Game.getLowest(self.frame.origin.x)
         print("CCCCCCCCCC tapped \(lowest)")
-        self.updateFromDiff(CGPointMake(0, lowest - self.frame.height - self.frame.origin.y))
+        if (0 < lowest) {
+            self.updateFromDiff(CGPointMake(0, lowest - self.frame.height - self.frame.origin.y))
+        }
     }
     
     func addDoubleTap(selector: Selector) {

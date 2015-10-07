@@ -59,7 +59,7 @@ class TetrisViewController: UIViewController {
         let isGround: Bool = tetrimino!.moveTo(world!)
         if (isGround) {
             world!.removeLine()
-            tetrimino!.dispose(self.view)
+            tetrimino!.replace(self.view, w: world!)
             tetrimino = factory!.create(self.view)
         }
     }

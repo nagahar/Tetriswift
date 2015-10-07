@@ -10,18 +10,18 @@ import UIKit
 
 class Game {
     static var unit: CGFloat = 0
+    static var width: CGFloat = 0
+    static var height: CGFloat = 0
     let world: World
-    let width: CGFloat
-    let height: CGFloat
     
     init (width: CGFloat, height: CGFloat) {
-        self.width = width
-        self.height = height
         world = World.getInstance()
         let x = floor(width / CGFloat(World.columns))
         let y = floor(height / CGFloat(World.rows))
         Game.unit = x < y ? x : y
         print("unit = \(Game.unit)")
+        Game.width = Game.unit * CGFloat(World.columns)
+        Game.height = Game.unit * CGFloat(World.rows)
     }
     
     func start() {
@@ -29,14 +29,37 @@ class Game {
     }
     
     static func getLowest(x: CGFloat) -> CGFloat {
-        let row = World.getLowest(Game.convert(x))
-        return CGFloat(row) * Game.unit
+        var lowest = CGFloat.max
+        let xi = Game.convert(x)
+        for var i = CGFloat(xi); i < Game.width; i += Game.unit {
+            let t = CGFloat(World.getLowest(xi))
+            if t < lowest && 0 < t {
+                lowest = t
+            }
+        }
+        
+        return lowest == CGFloat.max ? -1 : lowest * Game.unit
     }
     
-    static func normalize(diff: CGPoint, b: Block) -> CGPoint {
+    static func isRange(p: CGPoint, s: CGSize) -> Bool {
+        print("$$$$$$$$")
+        print(p)
+        print(s)
+        print(Game.width)
+        print(Game.height)
+        return p.x + s.width <= Game.width &&
+            p.y + s.height <= Game.height ? true : false
+    }
+    
+    static func normalize(diff: CGPoint, v: UIView) -> CGPoint {
         let y = diff.y < 0 ? 0 : diff.y
-        let p = Game.convert(CGPointMake(diff.x + b.frame.origin.x ,y + b.frame.origin.y))
-        return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
+        let orig = CGPointMake(diff.x + v.frame.origin.x ,y + v.frame.origin.y)
+        if (Game.isRange(orig, s: v.frame.size)) {
+            let p = Game.convert(orig)
+            return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
+        }
+        
+        return v.frame.origin
     }
     
     static func convert(val: CGPoint) -> (row: Int, column: Int) {

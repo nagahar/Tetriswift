@@ -27,7 +27,7 @@ class World {
     
     static func getLowest(col: Int) -> Int {
         if (col < 0 || World.columns - 1 < col) {
-            return 0
+            return -1
         }
         
         for i in 0..<World.rows {
@@ -40,22 +40,8 @@ class World {
     }
     
     func putBlock(b: Block) {
-        if (!b.isStopped) {
-            b.stop()
-            let p = Game.convert(b.frame.origin)
-            World.blocks[p.row][p.column] = b
-        }
-        
-        /*
-        let rect = convertRect(t.frame)
-        for i in rect.y..<rect.height {
-        for j in rect.x..<rect.width {
-        let b = Block()
-        b.tetris = t
-        self.blocks[i][j] = b
-        }
-        }
-        */
+        let p = Game.convert(b.frame.origin)
+        World.blocks[p.row][p.column] = b
     }
     
     func removeLine() {
