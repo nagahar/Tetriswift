@@ -45,23 +45,47 @@ class World {
     }
     
     func removeLine() {
-        /*
-        for i in 0..<self.blocks.count {
-        var isRemoved: Bool = true
-        var tetrises: [TetrisView] = []
-        for j in 0..<self.blocks[i].count {
-        isRemoved = isRemoved && self.blocks[i][j].isExist
-        tetrises.append(self.blocks[i][j].tetris)
+        var removeLine = [Int]()
+        for i in 0..<World.rows {
+            let row = World.blocks[i]
+            var isLine = true
+            for j in 0..<World.columns {
+                if let _ = row[j] {
+                } else {
+                    isLine = false
+                    break
+                }
+            }
+            
+            if (isLine) {
+                removeLine.append(i)
+            }
         }
         
-        if (isRemoved) {
-        for t in tetrises {
-        // tetrisオブジェクトの対応する行を消す(factoryを使ってコピーし、分割する)
-        // 上にあるtetrisオブジェクトを一括して下に移動するようにdestを変更する
+        if (0 < removeLine.count) {
+            var j: Int = removeLine.count - 1
+            var d: CGFloat = 0
+            for var i = World.rows - 1 ; -1 < i ; i-- {
+                if (-1 < j && i == removeLine[j]) {
+                    d++
+                    j--
+                    for c in 0..<World.columns {
+                        if let col = World.blocks[i][c] {
+                            col.dispose()
+                            World.blocks[i][c] = nil
+                        }
+                    }
+                } else {
+                    for c in 0..<World.columns {
+                        if let col = World.blocks[i][c] {
+                            col.updateFromDiff(CGPointMake(0, d * Game.funit))
+                            col.moveTo(self)
+                            self.putBlock(col)
+                        }
+                    }
+                }
+            }
         }
-        }
-        }
-        */
     }
     
     func isGround(tuple: (row: Int, column: Int)) -> Bool {

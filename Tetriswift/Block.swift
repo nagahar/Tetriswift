@@ -8,8 +8,7 @@
 
 import UIKit
 
-class Block: UIView {
-    var dest: CGPoint = CGPointZero
+class Block: TetrisView {
     var tetrimino: Tetrimino?
     var isGround: Bool = false
     
@@ -26,8 +25,8 @@ class Block: UIView {
     }
     
     init (o: CGPoint, c: UIColor, t: Tetrimino) {
+        super.init(frame: CGRectMake(o.x, o.y, Game.funit, Game.funit))
         self.tetrimino = t
-        super.init(frame: CGRectMake(o.x, o.y, Game.unit, Game.unit))
         self.backgroundColor = c
         self.reset()
         // to capture event on super view
@@ -42,23 +41,14 @@ class Block: UIView {
         self.removeFromSuperview()
     }
     
-    /*
     func moveTo(w: World) {
-        print("origin: \(self.frame.origin)")
-        print("dest: \(self.dest)")
-        let wdst = Game.convert(self.dest)
-        self.isGround = true
-        if (w.hasSpace(wdst)) {
-            print("MMMMMMMMMMMMMMMM")
-            self.translate(self.dest - self.frame.origin)
-            self.isGround = w.isBound(wdst)
-            if (self.isGround) {
-                print("Stop \(self.frame.origin)")
-                w.putBlock(self)
-            }
-        }
+        super.moveTo(w, c:{() -> Bool in
+            print("BBBBBBBB")
+            Util.translate(self.dest - self.frame.origin, v: self)
+            return false
+        })
     }
-*/
+    
     func locationInView(parent: UIView) -> CGPoint {
         return self.frame.origin + parent.frame.origin
     }
@@ -70,15 +60,8 @@ class Block: UIView {
     func reset() {
         dest = self.frame.origin
     }
-   
+    
     func getDiff () -> CGPoint {
         return self.frame.origin - CGPointMake(0, 0)
     }
-    
-    /*
-    func setDestinationFromDiff(diff: CGPoint) {
-        self.dest = Game.normalize(diff, v: self)
-        print("set dest \(self.dest)")
-    }
-*/
 }

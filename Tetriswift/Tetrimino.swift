@@ -8,17 +8,15 @@
 
 import UIKit
 
-class Tetrimino: UIView {
+class Tetrimino: TetrisView {
     var type: TetriminoType = .None
     var game: Game!
     var blocks: [Block] = []
-    var isStopped: Bool = false
-    var dest: CGPoint = CGPointZero
     
     static let p_00: CGPoint = CGPointMake(0, 0)
-    static let p_01: CGPoint = CGPointMake(0, Game.unit)
-    static let p_10: CGPoint = CGPointMake(Game.unit, 0)
-    static let p_11: CGPoint = CGPointMake(Game.unit, Game.unit)
+    static let p_01: CGPoint = CGPointMake(0, Game.funit)
+    static let p_10: CGPoint = CGPointMake(Game.funit, 0)
+    static let p_11: CGPoint = CGPointMake(Game.funit, Game.funit)
     
     init () {
         super.init(frame: CGRectZero)
@@ -52,7 +50,7 @@ class Tetrimino: UIView {
     private static func getSize(type: TetriminoType) -> CGRect {
         switch type {
         case .O:
-            return CGRectMake(0, 0, Game.unit * 2, Game.unit * 2)
+            return CGRectMake(0, 0, Game.funit * 2, Game.funit * 2)
         case .I:
             return CGRectZero
         case .S:
@@ -106,8 +104,16 @@ class Tetrimino: UIView {
         Tetrimino.reset(self, p: parent, w: w)
     }
     
-    func updateFromDiff(diff: CGPoint) {
-        self.dest = Game.normalize(diff, v: self)
+    func moveTo(w: World) -> Bool {
+        return super.moveTo(w, c:{() -> Bool in
+            if (self.hasSpace(w)) {
+                print("MMMMMMMMMMMMMMMM")
+                Util.translate(self.dest - self.frame.origin, v: self)
+                return self.isGround(w)
+            }
+            
+            return false
+        })
     }
     
     func hasSpace(w: World) -> Bool {
@@ -126,31 +132,6 @@ class Tetrimino: UIView {
         }
         
         return ret
-    }
-    
-    func convert(b: Block) -> (Int, Int) {
-        return Game.convert(b.locationInView(self))
-    }
-    
-    func moveTo(w: World) -> Bool {
-        var isGround: Bool = false
-        if (Util.hasUpdated(self.dest, v: self)) {
-            print("move from \(self.frame.origin)")
-            print("dest: \(self.dest)")
-            if (self.hasSpace(w)) {
-                print("MMMMMMMMMMMMMMMM")
-                Util.translate(self.dest - self.frame.origin, v: self)
-                isGround = self.isGround(w)
-            }
-        }
-        
-        return isGround
-    }
-    
-    func sortDesc() -> [Block] {
-        return self.blocks.sort({(a: Block, b: Block) -> Bool in
-            return (a.frame.origin.y > b.frame.origin.y)
-        })
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -182,7 +163,6 @@ class Tetrimino: UIView {
         return block
     }
     
-    
     static func reset(t: Tetrimino, p: UIView, w: World) {
         for b in t.blocks {
             b.frame.origin = b.locationInView(t)
@@ -195,7 +175,7 @@ class Tetrimino: UIView {
     
     func doubleTapped(sender: UITapGestureRecognizer) {
         print("DDDDDDDDDDDDDDDD")
-        let lowest = Game.getLowest(self.frame.origin.x)
+        let lowest = CGFloat(Game.getLowest(self.frame.origin.x))
         print("CCCCCCCCCC tapped \(lowest)")
         if (0 < lowest) {
             self.updateFromDiff(CGPointMake(0, lowest - self.frame.height - self.frame.origin.y))

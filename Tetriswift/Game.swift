@@ -9,57 +9,62 @@
 import UIKit
 
 class Game {
-    static var unit: CGFloat = 0
-    static var width: CGFloat = 0
-    static var height: CGFloat = 0
+    static var unit: Int = 0
+    static var funit: CGFloat = 0
+    static var root: UIView?
+    let xinit: CGFloat = 5
+    let yinit: CGFloat = 0
     let world: World
     
     init (width: CGFloat, height: CGFloat) {
         world = World.getInstance()
-        let x = floor(width / CGFloat(World.columns))
-        let y = floor(height / CGFloat(World.rows))
+        let x = Int(width) / World.columns
+        let y = Int(height) / World.rows
         Game.unit = x < y ? x : y
+        Game.funit = CGFloat(Game.unit)
         print("unit = \(Game.unit)")
-        Game.width = Game.unit * CGFloat(World.columns)
-        Game.height = Game.unit * CGFloat(World.rows)
+        let w = Game.unit * World.columns
+        let h = Game.unit * World.rows
+        Game.root = UIView(frame: CGRectMake(xinit, yinit, CGFloat(w), CGFloat(h)))
+        Game.root!.backgroundColor = UIColor.whiteColor()
+        print(Game.root!.frame.size)
     }
     
     func start() {
         print("start")
     }
     
-    static func getLowest(x: CGFloat) -> CGFloat {
-        var lowest = CGFloat.max
+    static func getLowest(x: CGFloat) -> Int {
+        var lowest = Int.max
         let xi = Game.convert(x)
-        for var i = CGFloat(xi); i < Game.width; i += Game.unit {
-            let t = CGFloat(World.getLowest(xi))
+        for var i = xi; i < Int(Game.root!.frame.width); i += Game.unit {
+            let t = World.getLowest(xi)
             if t < lowest && 0 < t {
                 lowest = t
             }
         }
         
-        return lowest == CGFloat.max ? -1 : lowest * Game.unit
+        return lowest == Int.max ? -1 : lowest * Game.unit
     }
     
     static func isRange(p: CGPoint, s: CGSize) -> Bool {
-        print("$$$$$$$$")
-        print(p)
-        print(s)
-        print(Game.width)
-        print(Game.height)
-        return p.x + s.width <= Game.width &&
-            p.y + s.height <= Game.height ? true : false
+        return p.x + s.width <= Game.root!.frame.width &&
+            p.y + s.height <= Game.root!.frame.height ? true : false
+    }
+    
+    static func isRange(col: Int, row: Int, s: CGSize) -> Bool {
+        return col + Int(s.width) / Game.unit <= World.columns && row + Int(s.height) / Game.unit <= World.rows
     }
     
     static func normalize(diff: CGPoint, v: UIView) -> CGPoint {
         let y = diff.y < 0 ? 0 : diff.y
         let orig = CGPointMake(diff.x + v.frame.origin.x ,y + v.frame.origin.y)
-        if (Game.isRange(orig, s: v.frame.size)) {
-            let p = Game.convert(orig)
-            return CGPointMake(CGFloat(p.column) * Game.unit, CGFloat(p.row) * Game.unit)
+        let p = Game.convert(orig)
+        if (isRange(p.column, row: p.row, s: v.frame.size)) {
+            return CGPointMake(CGFloat(p.column * Game.unit), CGFloat(p.row * Game.unit))
+        } else {
+            return v.frame.origin
         }
-        
-        return v.frame.origin
     }
     
     static func convert(val: CGPoint) -> (row: Int, column: Int) {
@@ -85,6 +90,6 @@ class Game {
     }
     
     static func convert(val: CGFloat) -> Int {
-        return Int(floor(val / Game.unit))
+        return Int(val) / Game.unit
     }
 }
