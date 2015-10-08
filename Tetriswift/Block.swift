@@ -28,8 +28,7 @@ class Block: TetrisView {
         super.init(frame: CGRectMake(o.x, o.y, Game.funit, Game.funit))
         self.tetrimino = t
         self.backgroundColor = c
-        self.reset()
-        // to capture event on super view
+        // to avoid capturing event on this view
         self.userInteractionEnabled = false
     }
     
@@ -52,16 +51,5 @@ class Block: TetrisView {
     func locationInView(parent: UIView) -> CGPoint {
         return self.frame.origin + parent.frame.origin
     }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("@@@@@@@@@")
-    }
-    
-    func reset() {
-        dest = self.frame.origin
-    }
-    
-    func getDiff () -> CGPoint {
-        return self.frame.origin - CGPointMake(0, 0)
-    }
+   
 }
