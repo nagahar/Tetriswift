@@ -52,7 +52,6 @@ class TetrisViewController: UIViewController {
     
     func onUpdate(timer: NSTimer) {
         self.timeCount += 1
-        
         if (self.isTimeToMove(timeCount)) {
             tetrimino!.updateFromDiff(CGPointMake(0, Game.funit))
             self.timeCount = 0

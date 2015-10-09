@@ -8,7 +8,8 @@
 
 import UIKit
 
-class Tetrimino: TetrisView {
+class Tetrimino: UIView {
+    var dest: CGPoint = CGPointZero
     var type: TetriminoType = .None
     var game: Game!
     var blocks: [Block] = []
@@ -96,7 +97,6 @@ class Tetrimino: TetrisView {
         }
         
         self.blocks = []
-        NSLog("%s, %d", __FUNCTION__, __LINE__)
     }
     
     func replace(parent: UIView, w: World) {
@@ -105,37 +105,42 @@ class Tetrimino: TetrisView {
     }
     
     func moveTo(w: World) -> Bool {
-        return super.moveTo(w, c:{() -> Bool in
-            if (self.hasSpace(w)) {
-                print("MMMMMMMMMMMMMMMM")
-                Util.translate(self.dest - self.frame.origin, v: self)
-                return self.isGround(w)
-            }
-            
-            return false
+        let ret = Util.moveTo(self,
+            dest: self.dest,
+            c:{() -> Bool in
+                return !self.isOccupied(w) })
+        return ret ? self.isGround(w) : false
+    }
+    
+    func convert(b: Block) -> (Int, Int) {
+        return Game.convert(b.locationInView(self))
+    }
+    
+    func updateFromDiff(diff: CGPoint) {
+        self.dest = Game.normalize(diff, v: self)
+    }
+    
+    func isOccupied(w: World) -> Bool {
+        return occupied({ b in
+            let t = self.convert(b)
+            return w.isOccupied(t.0, col: t.1)
         })
     }
     
-    func hasSpace(w: World) -> Bool {
+    func occupied(c: (Block) -> Bool) -> Bool {
         var ret: Bool = false
         for b in self.blocks {
-            ret = ret || w.hasSpace(convert(b))
+            ret = ret || c(b)
         }
         
         return ret
     }
     
     func isGround(w: World) -> Bool {
-        var ret: Bool = false
-        for b in self.blocks {
-            ret = ret || w.isGround(convert(b))
-        }
-        
-        return ret
-    }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("@@@@@@@@@")
+        return occupied({ b in
+            let t = self.convert(b)
+            return w.isOccupied(t.0 + 1, col: t.1)
+        })
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {

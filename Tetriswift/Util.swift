@@ -17,4 +17,17 @@ class Util {
     static func translate(p: CGPoint, v: UIView) {
         v.transform = CGAffineTransformTranslate(v.transform, p.x , p.y)
     }
+    
+    static func moveTo(v: UIView, dest: CGPoint, c: () -> Bool) -> Bool {
+        if (Util.hasUpdated(dest, v: v)) {
+            if (c()) {
+                print("move from \(v.frame.origin)")
+                print("dest: \(dest)")
+                Util.translate(dest - v.frame.origin, v: v)
+                return true
+            }
+        }
+        
+        return false
+    }
 }

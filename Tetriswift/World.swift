@@ -70,17 +70,16 @@ class World {
                     d++
                     j--
                     for c in 0..<World.columns {
-                        if let col = World.blocks[i][c] {
-                            col.dispose()
+                        if let b = World.blocks[i][c] {
+                            b.dispose()
                             World.blocks[i][c] = nil
                         }
                     }
                 } else {
                     for c in 0..<World.columns {
-                        if let col = World.blocks[i][c] {
-                            col.updateFromDiff(CGPointMake(0, d * Game.funit))
-                            col.moveTo(self)
-                            self.putBlock(col)
+                        if let b = World.blocks[i][c] {
+                            b.moveTo(self, dest: CGPointMake(0, d * Game.funit) + b.frame.origin)
+                            self.putBlock(b)
                         }
                     }
                 }
@@ -88,27 +87,12 @@ class World {
         }
     }
     
-    func isGround(tuple: (row: Int, column: Int)) -> Bool {
-        if (tuple.row == World.rows - 1) {
-            return true
-        } else if let _ = World.blocks[tuple.row + 1][tuple.column] {
-            return true
-        } else {
-            return false
-        }
+    private func isInRange(row: Int, col: Int) -> Bool {
+        return 0 <= row && row < World.rows
+            && 0 <= col && col < World.columns
     }
     
-    func hasSpace(tuple: (row: Int, column: Int)) -> Bool {
-        if (tuple.row < 0
-            || tuple.column < 0
-            || World.rows - 1 < tuple.row
-            || World.columns - 1 < tuple.column)
-        {
-            return false
-        } else if let _ = World.blocks[tuple.row][tuple.column] {
-            return false
-        } else {
-            return true
-        }
+    func isOccupied(row: Int, col: Int) -> Bool {
+        return isInRange(row, col: col) ? World.blocks[row][col] != nil : true
     }
 }

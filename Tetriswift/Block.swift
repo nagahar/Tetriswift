@@ -8,9 +8,8 @@
 
 import UIKit
 
-class Block: TetrisView {
+class Block: UIView {
     var tetrimino: Tetrimino?
-    var isGround: Bool = false
     
     init () {
         super.init(frame: CGRectZero)
@@ -40,16 +39,14 @@ class Block: TetrisView {
         self.removeFromSuperview()
     }
     
-    func moveTo(w: World) {
-        super.moveTo(w, c:{() -> Bool in
+    func moveTo(w: World, dest: CGPoint) {
+        Util.moveTo(self, dest: dest, c:{() -> Bool in
             print("BBBBBBBB")
-            Util.translate(self.dest - self.frame.origin, v: self)
-            return false
+            return true
         })
     }
     
     func locationInView(parent: UIView) -> CGPoint {
         return self.frame.origin + parent.frame.origin
     }
-   
 }
