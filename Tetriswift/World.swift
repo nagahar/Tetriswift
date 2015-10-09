@@ -25,9 +25,9 @@ class World {
         return World.sharedInstance
     }
     
-    static func getTopRow(col: Int) -> Int {
+    static func getLowest(col: Int) -> Int {
         if (col < 0 || World.columns - 1 < col) {
-            return 0
+            return -1
         }
         
         for i in 0..<World.rows {
@@ -40,65 +40,59 @@ class World {
     }
     
     func putBlock(b: Block) {
-        if (!b.isStopped) {
-            b.stop()
-            let p = b.origin_w
-            World.blocks[p.row][p.column] = b
-        }
-        
-        /*
-        let rect = convertRect(t.frame)
-        for i in rect.y..<rect.height {
-        for j in rect.x..<rect.width {
-        let b = Block()
-        b.tetris = t
-        self.blocks[i][j] = b
-        }
-        }
-        */
+        let p = Game.convert(b.frame.origin)
+        World.blocks[p.row][p.column] = b
     }
     
     func removeLine() {
-        /*
-        for i in 0..<self.blocks.count {
-        var isRemoved: Bool = true
-        var tetrises: [TetrisView] = []
-        for j in 0..<self.blocks[i].count {
-        isRemoved = isRemoved && self.blocks[i][j].isExist
-        tetrises.append(self.blocks[i][j].tetris)
+        var removeLine = [Int]()
+        for i in 0..<World.rows {
+            let row = World.blocks[i]
+            var isLine = true
+            for j in 0..<World.columns {
+                if let _ = row[j] {
+                } else {
+                    isLine = false
+                    break
+                }
+            }
+            
+            if (isLine) {
+                removeLine.append(i)
+            }
         }
         
-        if (isRemoved) {
-        for t in tetrises {
-        // tetrisオブジェクトの対応する行を消す(factoryを使ってコピーし、分割する)
-        // 上にあるtetrisオブジェクトを一括して下に移動するようにdestを変更する
+        if (0 < removeLine.count) {
+            var j: Int = removeLine.count - 1
+            var d: CGFloat = 0
+            for var i = World.rows - 1 ; -1 < i ; i-- {
+                if (-1 < j && i == removeLine[j]) {
+                    d++
+                    j--
+                    for c in 0..<World.columns {
+                        if let b = World.blocks[i][c] {
+                            b.dispose()
+                            World.blocks[i][c] = nil
+                        }
+                    }
+                } else {
+                    for c in 0..<World.columns {
+                        if let b = World.blocks[i][c] {
+                            b.moveTo(self, dest: CGPointMake(0, d * Game.funit) + b.frame.origin)
+                            self.putBlock(b)
+                        }
+                    }
+                }
+            }
         }
-        }
-        }
-        */
     }
     
-    func isBound(tuple: (row: Int, column: Int)) -> Bool {
-        if (tuple.row == World.rows - 1) {
-            return true
-        } else if let _ = World.blocks[tuple.row + 1][tuple.column] {
-            return true
-        } else {
-            return false
-        }
+    private func isInRange(row: Int, col: Int) -> Bool {
+        return 0 <= row && row < World.rows
+            && 0 <= col && col < World.columns
     }
     
-    func hasSpace(tuple: (row: Int, column: Int)) -> Bool {
-        if (tuple.row < 0
-            || tuple.column < 0
-            || World.rows - 1 < tuple.row
-            || World.columns - 1 < tuple.column)
-        {
-            return false
-        } else if let _ = World.blocks[tuple.row][tuple.column] {
-            return false
-        } else {
-            return true
-        }
+    func isOccupied(row: Int, col: Int) -> Bool {
+        return isInRange(row, col: col) ? World.blocks[row][col] != nil : true
     }
 }

@@ -22,10 +22,13 @@ class TetrisViewController: UIViewController {
     
     @IBAction func Start(sender: AnyObject) {
         print("w, h: \(self.view.frame)")
+        self.view.backgroundColor = UIColor.grayColor()
         game = Game(width: self.view.frame.width, height: self.view.frame.height)
+        self.view.addSubview(Game.root!)
         world = game!.world
         factory = TetriminoFactory(game: game!)
-        tetrimino = factory!.create(self.view)
+        
+        tetrimino = factory!.create(Game.root!)
         game!.start()
         NSTimer.scheduledTimerWithTimeInterval(Double(1.0 / Double(Rate)), target: self, selector: "onUpdate:", userInfo: nil, repeats: true)
         StatButton.hidden = true
@@ -40,19 +43,26 @@ class TetrisViewController: UIViewController {
         return true
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if let touch = touches.first {
+            print("\(touch.view)")
+        }
+        print("@@@@@@@@@")
+    }
+    
     func onUpdate(timer: NSTimer) {
         self.timeCount += 1
-        
         if (self.isTimeToMove(timeCount)) {
-            tetrimino!.updateFromDiff(CGPointMake(0, Game.unit))
+            tetrimino!.updateFromDiff(CGPointMake(0, Game.funit))
             self.timeCount = 0
+            //NSLog("%s, %d", __FUNCTION__, __LINE__)
         }
         
-        let isBound: Bool = tetrimino!.moveTo(world!)
-        if (isBound) {
+        let isGround: Bool = tetrimino!.moveTo(world!)
+        if (isGround) {
+            tetrimino!.replace(Game.root!, w: world!)
             world!.removeLine()
-            tetrimino!.dispose()
-            tetrimino = factory!.create(self.view)
+            tetrimino = factory!.create(Game.root!)
         }
     }
     

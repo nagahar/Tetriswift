@@ -19,10 +19,10 @@
 		216A27511B7EDC2E0058E49A /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A27501B7EDC2E0058E49A /* Block.swift */; };
 		216A27531B7EFF130058E49A /* Tetrimino.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A27521B7EFF130058E49A /* Tetrimino.swift */; };
 		218822491B5B3EC200369C1F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218822471B5B3EC200369C1F /* Main.storyboard */; };
+		21912F6A1BC2CB0700CCD352 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21912F691BC2CB0700CCD352 /* Util.swift */; settings = {ASSET_TAGS = (); }; };
 		21C712381B63BCE6000BAD75 /* TetrisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C712361B63BCE6000BAD75 /* TetrisViewController.swift */; };
 		21C712391B63BCE6000BAD75 /* TetrisViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21C712371B63BCE6000BAD75 /* TetrisViewController.xib */; };
 		21E26C641B6CE53B00AD9BA7 /* TetriminoFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C631B6CE53B00AD9BA7 /* TetriminoFactory.swift */; };
-		21E26C661B6CEE5D00AD9BA7 /* ViewProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,10 +52,10 @@
 		216A27501B7EDC2E0058E49A /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		216A27521B7EFF130058E49A /* Tetrimino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tetrimino.swift; sourceTree = "<group>"; };
 		218822481B5B3EC200369C1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		21912F691BC2CB0700CCD352 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		21C712361B63BCE6000BAD75 /* TetrisViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisViewController.swift; sourceTree = "<group>"; };
 		21C712371B63BCE6000BAD75 /* TetrisViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TetrisViewController.xib; sourceTree = "<group>"; };
 		21E26C631B6CE53B00AD9BA7 /* TetriminoFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetriminoFactory.swift; sourceTree = "<group>"; };
-		21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,13 +106,13 @@
 				21C712361B63BCE6000BAD75 /* TetrisViewController.swift */,
 				21C712371B63BCE6000BAD75 /* TetrisViewController.xib */,
 				21E26C631B6CE53B00AD9BA7 /* TetriminoFactory.swift */,
-				21E26C651B6CEE5D00AD9BA7 /* ViewProxy.swift */,
 				212F27821B6CFC1200F4A70B /* World.swift */,
 				213EBA6F1B7CC98A00362ADA /* Extension.swift */,
 				216A27501B7EDC2E0058E49A /* Block.swift */,
 				216A27521B7EFF130058E49A /* Tetrimino.swift */,
 				2149B3821B80B0560034DA15 /* TetriminoType.swift */,
 				2149B3841B80B51B0034DA15 /* Game.swift */,
+				21912F691BC2CB0700CCD352 /* Util.swift */,
 			);
 			path = Tetriswift;
 			sourceTree = "<group>";
@@ -245,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21912F6A1BC2CB0700CCD352 /* Util.swift in Sources */,
 				213EBA721B7CF14B00362ADA /* InfoTableViewController.swift in Sources */,
 				216A27511B7EDC2E0058E49A /* Block.swift in Sources */,
 				216A27531B7EFF130058E49A /* Tetrimino.swift in Sources */,
@@ -255,7 +256,6 @@
 				21E26C641B6CE53B00AD9BA7 /* TetriminoFactory.swift in Sources */,
 				2149B3831B80B0560034DA15 /* TetriminoType.swift in Sources */,
 				212D07151B5B2D0400965733 /* AppDelegate.swift in Sources */,
-				21E26C661B6CEE5D00AD9BA7 /* ViewProxy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
