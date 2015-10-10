@@ -105,42 +105,38 @@ class Tetrimino: UIView {
     }
     
     func moveTo(w: World) -> Bool {
-        let ret = Util.moveTo(self,
-            dest: self.dest,
-            c:{() -> Bool in
-                return !self.isOccupied(w) })
-        return ret ? self.isGround(w) : false
+        if (Game.hasUpdated(self.dest, v: self)) {
+            let result = isOccupiedAndGrounded(w)
+            if (!result.isOccupied) {
+                print("move from \(self.frame.origin)")
+                print("dest: \(dest)")
+                Game.translate(dest - self.frame.origin, v: self)
+                return result.isGrounded
+            }
+        }
+        
+        return false
     }
     
     func convert(b: Block) -> (Int, Int) {
-        return Game.convert(b.locationInView(self))
+        return Game.convert(b.locationInView(self) + self.dest - self.frame.origin)
     }
     
     func updateFromDiff(diff: CGPoint) {
         self.dest = Game.normalize(diff, v: self)
     }
     
-    func isOccupied(w: World) -> Bool {
-        return occupied({ b in
-            let t = self.convert(b)
-            return w.isOccupied(t.0, col: t.1)
-        })
-    }
-    
-    func occupied(c: (Block) -> Bool) -> Bool {
-        var ret: Bool = false
+    func isOccupiedAndGrounded(w: World) -> (isOccupied: Bool, isGrounded: Bool) {
+        var isOccupied: Bool = false
+        var isGrounded: Bool = false
         for b in self.blocks {
-            ret = ret || c(b)
+            let t = self.convert(b)
+            let res = w.isOccupiedAndGrounded(t.0, col: t.1)
+            isOccupied = isOccupied || res.isOccupied
+            isGrounded = isGrounded || res.isGrounded
         }
         
-        return ret
-    }
-    
-    func isGround(w: World) -> Bool {
-        return occupied({ b in
-            let t = self.convert(b)
-            return w.isOccupied(t.0 + 1, col: t.1)
-        })
+        return (isOccupied, isGrounded)
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {

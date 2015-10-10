@@ -92,4 +92,12 @@ class Game {
     static func convert(val: CGFloat) -> Int {
         return Int(val) / Game.unit
     }
+    
+    static func hasUpdated(p: CGPoint, v: UIView) -> Bool {
+        return !CGPointEqualToPoint(v.frame.origin, p)
+    }
+    
+    static func translate(p: CGPoint, v: UIView) {
+        v.transform = CGAffineTransformTranslate(v.transform, p.x , p.y)
+    }
 }
