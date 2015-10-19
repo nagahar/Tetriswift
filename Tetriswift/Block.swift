@@ -40,10 +40,10 @@ class Block: UIView {
     }
     
     func moveTo(w: World, dest: CGPoint) {
-        Util.moveTo(self, dest: dest, c:{() -> Bool in
+        if (Game.hasUpdated(dest, v: self)) {
             print("BBBBBBBB")
-            return true
-        })
+            Game.translate(dest - self.frame.origin, v: self)
+        }
     }
     
     func locationInView(parent: UIView) -> CGPoint {

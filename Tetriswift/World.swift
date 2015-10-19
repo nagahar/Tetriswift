@@ -92,7 +92,10 @@ class World {
             && 0 <= col && col < World.columns
     }
     
-    func isOccupied(row: Int, col: Int) -> Bool {
-        return isInRange(row, col: col) ? World.blocks[row][col] != nil : true
+    func isOccupiedAndGrounded(var row: Int, col: Int) -> (isOccupied: Bool, isGrounded: Bool) {
+        let oc = isInRange(row, col: col) ? World.blocks[row][col] != nil : true
+        row = row + 1
+        let gr = isInRange(row, col: col) ? World.blocks[row][col] != nil : true
+        return (oc, gr)
     }
 }
